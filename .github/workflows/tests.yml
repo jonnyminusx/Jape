@@ -1,0 +1,22 @@
+name: Engine tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  tests:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -S . -B build -DSYNPLE_BUILD_TESTS=ON -DENABLE_SANITIZERS=ON
+
+      - name: Build and run tests
+        run: cmake --build build
+        env:
+          ASAN_OPTIONS: detect_leaks=1
+          UBSAN_OPTIONS: print_stacktrace=1:halt_on_error=1
