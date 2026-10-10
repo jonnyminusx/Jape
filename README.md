@@ -1,6 +1,6 @@
 # Jape
 
-JUCE-free C++20 engine layers for Jape-based audio plugins. The public CMake targets are `Jape::Math`, `Jape::Midi`, `Jape::Dsp`, and `Jape::Synth`.
+C++20 engine layers for audio plugins. The public CMake targets are `Jape::Math`, `Jape::Midi`, `Jape::Dsp`, and `Jape::Synth`.
 
 ## Build and test
 
