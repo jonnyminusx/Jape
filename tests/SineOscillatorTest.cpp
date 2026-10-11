@@ -1,6 +1,4 @@
-#include <catch2/catch_approx.hpp>
-#include <catch2/catch_test_macros.hpp>
-#include <catch2/generators/catch_generators.hpp>
+#include <doctest/doctest.h>
 
 #include "dsp/Goertzel.h"
 #include "dsp/Rms.h"
@@ -51,7 +49,7 @@ TEST_CASE("SineOscillator RMS scales linearly with amplitude", "[oscillator][amp
     INFO("rms(1x) = " << rms1 << "  rms(2x) = " << rms2);
     REQUIRE(rms1 > 0.0f);
     // Doubling amplitude should double RMS, within 5%
-    REQUIRE(rms2 == Catch::Approx(2.0f * rms1).epsilon(0.05f));
+    REQUIRE(rms2 == doctest::Approx(2.0f * rms1).epsilon(0.05f));
 }
 
 // ─── Zero amplitude → silence ─────────────────────────────────────────────────
@@ -71,14 +69,28 @@ TEST_CASE("SineOscillator fundamental energy is concentrated at the set frequenc
 {
     constexpr int N = 16384;
 
-    const float f0 = GENERATE(440.0f, 1000.0f);
-    const auto sig = renderSine(f0, sampleRate, N);
-    const float atF0   = dsp::goertzel(sig, f0,           sampleRate);
-    const float atLow  = dsp::goertzel(sig, f0 - 100.0f, sampleRate);
-    const float atHigh = dsp::goertzel(sig, f0 + 100.0f, sampleRate);
-    INFO("f0=" << f0 << " Hz, energy at f0=" << atF0 << " at f0-100=" << atLow << " at f0+100=" << atHigh);
-    REQUIRE(atF0 > 10.0f * atLow);
-    REQUIRE(atF0 > 10.0f * atHigh);
+    SUBCASE("440 Hz")
+    {
+        const float f0 = 440.0f;
+        const auto sig = renderSine(f0, sampleRate, N);
+        const float atF0   = dsp::goertzel(sig, f0,           sampleRate);
+        const float atLow  = dsp::goertzel(sig, f0 - 100.0f, sampleRate);
+        const float atHigh = dsp::goertzel(sig, f0 + 100.0f, sampleRate);
+        INFO("f0=" << f0 << " Hz, energy at f0=" << atF0 << " at f0-100=" << atLow << " at f0+100=" << atHigh);
+        REQUIRE(atF0 > 10.0f * atLow);
+        REQUIRE(atF0 > 10.0f * atHigh);
+    }
+    SUBCASE("1000 Hz")
+    {
+        const float f0 = 1000.0f;
+        const auto sig = renderSine(f0, sampleRate, N);
+        const float atF0   = dsp::goertzel(sig, f0,           sampleRate);
+        const float atLow  = dsp::goertzel(sig, f0 - 100.0f, sampleRate);
+        const float atHigh = dsp::goertzel(sig, f0 + 100.0f, sampleRate);
+        INFO("f0=" << f0 << " Hz, energy at f0=" << atF0 << " at f0-100=" << atLow << " at f0+100=" << atHigh);
+        REQUIRE(atF0 > 10.0f * atLow);
+        REQUIRE(atF0 > 10.0f * atHigh);
+    }
 }
 
 // ─── Reset ────────────────────────────────────────────────────────────────────
@@ -110,5 +122,5 @@ TEST_CASE("SineOscillator produces identical output after reset", "[oscillator][
 
     REQUIRE(run1.size() == run2.size());
     for (size_t i = 0; i < run1.size(); ++i)
-        REQUIRE(run1[i] == Catch::Approx(run2[i]).epsilon(1e-5f));
+        REQUIRE(run1[i] == doctest::Approx(run2[i]).epsilon(1e-5f));
 }

@@ -1,6 +1,4 @@
-#include <catch2/catch_approx.hpp>
-#include <catch2/catch_test_macros.hpp>
-#include <catch2/generators/catch_generators.hpp>
+#include <doctest/doctest.h>
 
 #include "dsp/Mean.h"
 #include "dsp/Rms.h"
@@ -50,10 +48,24 @@ TEST_CASE("Raw BLEP output has near-zero DC after warmup", "[oscillator][dc]")
     constexpr int N = 16384;
     constexpr float tolerance = 0.01f;
 
-    const float f0 = GENERATE(440.0f, 1000.0f, 5000.0f);
-    auto sig = renderBlep(f0, sampleRate, N);
-    INFO("f0=" << f0 << " Hz, mean=" << dsp::mean(sig));
-    REQUIRE(std::abs(dsp::mean(sig)) < tolerance);
+    SUBCASE("440 Hz")
+    {
+        const auto sig = renderBlep(440.0f, sampleRate, N);
+        INFO("f0=440 Hz, mean=" << dsp::mean(sig));
+        REQUIRE(std::abs(dsp::mean(sig)) < tolerance);
+    }
+    SUBCASE("1000 Hz")
+    {
+        const auto sig = renderBlep(1000.0f, sampleRate, N);
+        INFO("f0=1000 Hz, mean=" << dsp::mean(sig));
+        REQUIRE(std::abs(dsp::mean(sig)) < tolerance);
+    }
+    SUBCASE("5000 Hz")
+    {
+        const auto sig = renderBlep(5000.0f, sampleRate, N);
+        INFO("f0=5000 Hz, mean=" << dsp::mean(sig));
+        REQUIRE(std::abs(dsp::mean(sig)) < tolerance);
+    }
 }
 
 // ─── Modulation ───────────────────────────────────────────────────────────────
