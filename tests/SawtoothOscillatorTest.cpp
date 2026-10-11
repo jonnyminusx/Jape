@@ -124,7 +124,7 @@ AliasingResult measureAliasing(
 
 // ─── Amplitude scaling ────────────────────────────────────────────────────────
 
-TEST_CASE("Sawtooth RMS scales linearly with amplitude", "[oscillator][amplitude]")
+TEST_CASE("Sawtooth RMS scales linearly with amplitude" "[oscillator][amplitude]")
 {
     constexpr int N = 16384;
 
@@ -142,7 +142,7 @@ TEST_CASE("Sawtooth RMS scales linearly with amplitude", "[oscillator][amplitude
 
 // ─── Zero amplitude → silence ─────────────────────────────────────────────────
 
-TEST_CASE("Zero amplitude produces silence", "[oscillator][amplitude]")
+TEST_CASE("Zero amplitude produces silence" "[oscillator][amplitude]")
 {
     constexpr int N = 8192;
     const auto sig = renderRaw(440.0f, sampleRate, N, 0.0f);
@@ -153,7 +153,7 @@ TEST_CASE("Zero amplitude produces silence", "[oscillator][amplitude]")
 
 // ─── Frequency accuracy ───────────────────────────────────────────────────────
 
-TEST_CASE("Oscillator fundamental energy is concentrated at the set frequency", "[oscillator][frequency]")
+TEST_CASE("Oscillator fundamental energy is concentrated at the set frequency" "[oscillator][frequency]")
 {
     constexpr int N = 16384;
 
@@ -183,7 +183,7 @@ TEST_CASE("Oscillator fundamental energy is concentrated at the set frequency", 
 
 // ─── Reset ────────────────────────────────────────────────────────────────────
 
-TEST_CASE("Oscillator produces identical output after reset", "[oscillator][reset]")
+TEST_CASE("Oscillator produces identical output after reset" "[oscillator][reset]")
 {
     constexpr int N = 2048;
     constexpr float f0 = 440.0f;
@@ -218,7 +218,7 @@ TEST_CASE("Oscillator produces identical output after reset", "[oscillator][rese
 
 // ─── Aliasing: sanity check ───────────────────────────────────────────────────
 
-TEST_CASE("Oscillator produces a signal at the expected fundamental frequency", "[oscillator][aliasing]")
+TEST_CASE("Oscillator produces a signal at the expected fundamental frequency" "[oscillator][aliasing]")
 {
     constexpr int N = 16384;
 
@@ -264,7 +264,7 @@ TEST_CASE("Oscillator produces a signal at the expected fundamental frequency", 
 //   3000 Hz → first alias at 20100 Hz
 //   5000 Hz → aliases at 19100, 14100, 9100, 4100 Hz
 //   7000 Hz → many aliases fold back
-TEST_CASE("Sawtooth oscillator suppresses aliasing relative to the fundamental", "[oscillator][aliasing]")
+TEST_CASE("Sawtooth oscillator suppresses aliasing relative to the fundamental" "[oscillator][aliasing]")
 {
     constexpr int N = 16384;
 
@@ -300,7 +300,7 @@ TEST_CASE("Sawtooth oscillator suppresses aliasing relative to the fundamental",
 
 // ─── Aliasing: suppression across sample rates ────────────────────────────────
 
-TEST_CASE("Alias suppression holds across common sample rates", "[oscillator][aliasing]")
+TEST_CASE("Alias suppression holds across common sample rates" "[oscillator][aliasing]")
 {
     // 3000 Hz is chosen because its harmonic aliases land clearly between
     // harmonics at all three sample rates, giving unambiguous measurements.

@@ -51,7 +51,7 @@ float measureGain(dsp::Filter& filter, float freq)
 
 // ─── reset() semantics ───────────────────────────────────────────────────────
 
-TEST_CASE("Filter reset clears state but preserves coefficients", "[filter]")
+TEST_CASE("Filter reset clears state but preserves coefficients" "[filter]")
 {
     dsp::Filter filter;
     filter.setSampleRate(sampleRate);
@@ -68,12 +68,12 @@ TEST_CASE("Filter reset clears state but preserves coefficients", "[filter]")
     for (int i = 0; i < 4096; ++i)
         out = filter.render(1.0f);
 
-    REQUIRE(out == doctest::Approx(1.0f).margin(0.01f));
+    REQUIRE(std::abs(out - 1.0f) <= 0.01f);
 }
 
 // ─── DC gain ─────────────────────────────────────────────────────────────────
 
-TEST_CASE("Filter passes DC at unity gain", "[filter]")
+TEST_CASE("Filter passes DC at unity gain" "[filter]")
 {
     SUBCASE("sample rate 44100 Hz")
     {
@@ -86,7 +86,7 @@ TEST_CASE("Filter passes DC at unity gain", "[filter]")
         for (int i = 0; i < 4096; ++i)
             out = filter.render(1.0f);
 
-        REQUIRE(out == doctest::Approx(1.0f).margin(0.01f));
+        REQUIRE(std::abs(out - 1.0f) <= 0.01f);
     }
     SUBCASE("sample rate 96000 Hz")
     {
@@ -99,13 +99,13 @@ TEST_CASE("Filter passes DC at unity gain", "[filter]")
         for (int i = 0; i < 4096; ++i)
             out = filter.render(1.0f);
 
-        REQUIRE(out == doctest::Approx(1.0f).margin(0.01f));
+        REQUIRE(std::abs(out - 1.0f) <= 0.01f);
     }
 }
 
 // ─── Frequency response ───────────────────────────────────────────────────────
 
-TEST_CASE("Filter gain at cutoff is -3 dB for Butterworth Q", "[filter][frequency]")
+TEST_CASE("Filter gain at cutoff is -3 dB for Butterworth Q" "[filter][frequency]")
 {
     // Q = 1/√2 is the Butterworth alignment: |H(fc)| = 1/√2 exactly.
     constexpr float fc = 1000.0f;
@@ -118,10 +118,10 @@ TEST_CASE("Filter gain at cutoff is -3 dB for Butterworth Q", "[filter][frequenc
     const float gain = measureGain(filter, fc);
     const float gainDb = 20.0f * std::log10(gain);
     INFO("Gain at fc: " << gain << " (" << gainDb << " dB), expected -3 dB");
-    REQUIRE(gainDb == doctest::Approx(-3.0f).margin(1.0f));
+    REQUIRE(std::abs(gainDb + 3.0f) <= 1.0f);
 }
 
-TEST_CASE("Filter attenuates two octaves above cutoff by at least 20 dB", "[filter][frequency]")
+TEST_CASE("Filter attenuates two octaves above cutoff by at least 20 dB" "[filter][frequency]")
 {
     // 2nd-order LP rolls off at -12 dB/oct; two octaves (4×fc) → ~24 dB of relative attenuation.
     constexpr float fc = 500.0f;
@@ -139,7 +139,7 @@ TEST_CASE("Filter attenuates two octaves above cutoff by at least 20 dB", "[filt
     REQUIRE(attenuationDb >= 20.0f);
 }
 
-TEST_CASE("Filter exhibits resonance peak at cutoff with high Q", "[filter][frequency]")
+TEST_CASE("Filter exhibits resonance peak at cutoff with high Q" "[filter][frequency]")
 {
     constexpr float fc = 1000.0f;
 
@@ -157,7 +157,7 @@ TEST_CASE("Filter exhibits resonance peak at cutoff with high Q", "[filter][freq
 
 // ─── Stability and edge cases ─────────────────────────────────────────────────
 
-TEST_CASE("Filter impulse response decays to silence", "[filter][stability]")
+TEST_CASE("Filter impulse response decays to silence" "[filter][stability]")
 {
     dsp::Filter filter;
     filter.setSampleRate(sampleRate);
@@ -172,7 +172,7 @@ TEST_CASE("Filter impulse response decays to silence", "[filter][stability]")
     REQUIRE(std::abs(out) < 1e-6f);
 }
 
-TEST_CASE("Filter with uninitialised coefficients returns zero without NaN", "[filter][stability]")
+TEST_CASE("Filter with uninitialised coefficients returns zero without NaN" "[filter][stability]")
 {
     // A freshly constructed filter has all-zero coefficients.
     // render() must return 0.0f, not NaN or infinity.
@@ -184,7 +184,7 @@ TEST_CASE("Filter with uninitialised coefficients returns zero without NaN", "[f
 
 // ─── Instance independence ────────────────────────────────────────────────────
 
-TEST_CASE("Two filter instances operate independently", "[filter]")
+TEST_CASE("Two filter instances operate independently" "[filter]")
 {
     // filterA has a very low cutoff (200 Hz); filterB has a high cutoff (5000 Hz).
     // At 1000 Hz, filterA attenuates heavily while filterB passes almost fully.

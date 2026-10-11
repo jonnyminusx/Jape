@@ -23,7 +23,7 @@ dsp::AudioBuffer makeBuffer(std::vector<std::vector<float>>& channels)
 
 // ─── Clean audio ─────────────────────────────────────────────────────────────
 
-TEST_CASE("sanitise leaves clean audio unchanged", "[sanitise]")
+TEST_CASE("sanitise leaves clean audio unchanged" "[sanitise]")
 {
     SUBCASE("zero buffer is unmodified")
     {
@@ -64,7 +64,7 @@ TEST_CASE("sanitise leaves clean audio unchanged", "[sanitise]")
 
 // ─── Soft clipping ───────────────────────────────────────────────────────────
 
-TEST_CASE("sanitise clamps samples in the range (1, 2] and [-2, -1)", "[sanitise][clamp]")
+TEST_CASE("sanitise clamps samples in the range (1, 2] and [-2, -1)" "[sanitise][clamp]")
 {
     SUBCASE("positive sample above 1.0 is clamped to 1.0")
     {
@@ -134,7 +134,7 @@ TEST_CASE("sanitise clamps samples in the range (1, 2] and [-2, -1)", "[sanitise
 
 // ─── Gross out-of-range silencing ────────────────────────────────────────────
 
-TEST_CASE("sanitise silences the channel when a sample exceeds ±2", "[sanitise][silence]")
+TEST_CASE("sanitise silences the channel when a sample exceeds ±2" "[sanitise][silence]")
 {
     SUBCASE("sample just above 2.0 silences the channel")
     {
@@ -196,7 +196,7 @@ TEST_CASE("sanitise silences the channel when a sample exceeds ±2", "[sanitise]
 
 // ─── Non-finite values ───────────────────────────────────────────────────────
 
-TEST_CASE("sanitise silences the channel on non-finite samples", "[sanitise][silence]")
+TEST_CASE("sanitise silences the channel on non-finite samples" "[sanitise][silence]")
 {
     const float inf = std::numeric_limits<float>::infinity();
     const float nan = std::numeric_limits<float>::quiet_NaN();
@@ -237,7 +237,7 @@ TEST_CASE("sanitise silences the channel on non-finite samples", "[sanitise][sil
 
 // ─── Multi-channel independence ──────────────────────────────────────────────
 
-TEST_CASE("sanitise processes each channel independently", "[sanitise][multichannel]")
+TEST_CASE("sanitise processes each channel independently" "[sanitise][multichannel]")
 {
     SUBCASE("a corrupted channel is silenced without disturbing a clean channel")
     {
@@ -294,7 +294,7 @@ TEST_CASE("sanitise processes each channel independently", "[sanitise][multichan
 
 // ─── Edge cases ──────────────────────────────────────────────────────────────
 
-TEST_CASE("sanitise handles edge cases safely", "[sanitise][edge]")
+TEST_CASE("sanitise handles edge cases safely" "[sanitise][edge]")
 {
     SUBCASE("empty buffer with no channels does not throw")
     {

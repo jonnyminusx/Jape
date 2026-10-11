@@ -36,7 +36,7 @@ std::vector<float> renderSine(float f0, float fs, int numSamples, float amplitud
 
 // ─── Amplitude scaling ────────────────────────────────────────────────────────
 
-TEST_CASE("SineOscillator RMS scales linearly with amplitude", "[oscillator][amplitude]")
+TEST_CASE("SineOscillator RMS scales linearly with amplitude" "[oscillator][amplitude]")
 {
     constexpr int N = 16384;
 
@@ -54,7 +54,7 @@ TEST_CASE("SineOscillator RMS scales linearly with amplitude", "[oscillator][amp
 
 // ─── Zero amplitude → silence ─────────────────────────────────────────────────
 
-TEST_CASE("SineOscillator zero amplitude produces silence", "[oscillator][amplitude]")
+TEST_CASE("SineOscillator zero amplitude produces silence" "[oscillator][amplitude]")
 {
     constexpr int N = 8192;
     const auto sig = renderSine(440.0f, sampleRate, N, 0.0f);
@@ -65,7 +65,7 @@ TEST_CASE("SineOscillator zero amplitude produces silence", "[oscillator][amplit
 
 // ─── Frequency accuracy ───────────────────────────────────────────────────────
 
-TEST_CASE("SineOscillator fundamental energy is concentrated at the set frequency", "[oscillator][frequency]")
+TEST_CASE("SineOscillator fundamental energy is concentrated at the set frequency" "[oscillator][frequency]")
 {
     constexpr int N = 16384;
 
@@ -95,7 +95,7 @@ TEST_CASE("SineOscillator fundamental energy is concentrated at the set frequenc
 
 // ─── Reset ────────────────────────────────────────────────────────────────────
 
-TEST_CASE("SineOscillator produces identical output after reset", "[oscillator][reset]")
+TEST_CASE("SineOscillator produces identical output after reset" "[oscillator][reset]")
 {
     constexpr int N = 2048;
     constexpr float f0 = 440.0f;

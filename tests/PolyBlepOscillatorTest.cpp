@@ -43,7 +43,7 @@ std::vector<float> renderBlep(float f0, float fs, int numSamples, float amplitud
 // The leaky integrator's DC gain is 1/(1-0.997) ≈ 333×, so even a tiny
 // residual DC in the raw output would read as a large mean in the integrated
 // signal — testing PolyBlepOscillator directly isolates the compensation logic.
-TEST_CASE("Raw BLEP output has near-zero DC after warmup", "[oscillator][dc]")
+TEST_CASE("Raw BLEP output has near-zero DC after warmup" "[oscillator][dc]")
 {
     constexpr int N = 16384;
     constexpr float tolerance = 0.01f;
@@ -70,7 +70,7 @@ TEST_CASE("Raw BLEP output has near-zero DC after warmup", "[oscillator][dc]")
 
 // ─── Modulation ───────────────────────────────────────────────────────────────
 
-TEST_CASE("Modulation parameter changes oscillator output", "[oscillator][modulation]")
+TEST_CASE("Modulation parameter changes oscillator output" "[oscillator][modulation]")
 {
     // setModulation() scales halfPeriod, which changes halfPhase_ and increment_.
     // Tested on PolyBlepOscillator directly: the leaky integrator in
@@ -98,7 +98,7 @@ TEST_CASE("Modulation parameter changes oscillator output", "[oscillator][modula
     REQUIRE(std::abs(rms1 - rmsHalf) > 0.01f);
 }
 
-TEST_CASE("setModulation clamps near-zero and negative values to prevent NaN", "[oscillator][modulation]")
+TEST_CASE("setModulation clamps near-zero and negative values to prevent NaN" "[oscillator][modulation]")
 {
     // Without the clamp in setModulation(), modulation=0 causes
     // increment_ = halfPhase_ / 0 → ±inf, producing NaN output.

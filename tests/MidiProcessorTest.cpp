@@ -27,7 +27,7 @@ struct FakeHandler : midi::NoteHandler
 
 // ─── Initial state ────────────────────────────────────────────────────────────
 
-TEST_CASE("MidiState defaults", "[midi]")
+TEST_CASE("MidiState defaults" "[midi]")
 {
     FakeHandler handler;
     midi::MidiProcessor proc{handler};
@@ -40,7 +40,7 @@ TEST_CASE("MidiState defaults", "[midi]")
 
 // ─── Note On / Note Off ───────────────────────────────────────────────────────
 
-TEST_CASE("Note On fires noteOn with correct note and velocity", "[midi][note]")
+TEST_CASE("Note On fires noteOn with correct note and velocity" "[midi][note]")
 {
     FakeHandler handler;
     midi::MidiProcessor proc{handler};
@@ -52,7 +52,7 @@ TEST_CASE("Note On fires noteOn with correct note and velocity", "[midi][note]")
     REQUIRE(handler.noteOns[0].velocity == 100);
 }
 
-TEST_CASE("Note On with velocity 0 is treated as Note Off", "[midi][note]")
+TEST_CASE("Note On with velocity 0 is treated as Note Off" "[midi][note]")
 {
     FakeHandler handler;
     midi::MidiProcessor proc{handler};
@@ -64,7 +64,7 @@ TEST_CASE("Note On with velocity 0 is treated as Note Off", "[midi][note]")
     REQUIRE(handler.noteOffs[0] == 60);
 }
 
-TEST_CASE("Note Off fires noteOff", "[midi][note]")
+TEST_CASE("Note Off fires noteOff" "[midi][note]")
 {
     FakeHandler handler;
     midi::MidiProcessor proc{handler};
@@ -75,7 +75,7 @@ TEST_CASE("Note Off fires noteOff", "[midi][note]")
     REQUIRE(handler.noteOffs[0] == 48);
 }
 
-TEST_CASE("MIDI channel nibble is ignored", "[midi][note]")
+TEST_CASE("MIDI channel nibble is ignored" "[midi][note]")
 {
     FakeHandler handler;
     midi::MidiProcessor proc{handler};
@@ -86,7 +86,7 @@ TEST_CASE("MIDI channel nibble is ignored", "[midi][note]")
     REQUIRE(handler.noteOns[0].note == 48);
 }
 
-TEST_CASE("Note data bytes are masked to 7 bits", "[midi][note]")
+TEST_CASE("Note data bytes are masked to 7 bits" "[midi][note]")
 {
     FakeHandler handler;
     midi::MidiProcessor proc{handler};
@@ -100,7 +100,7 @@ TEST_CASE("Note data bytes are masked to 7 bits", "[midi][note]")
 
 // ─── Mod Wheel ────────────────────────────────────────────────────────────────
 
-TEST_CASE("Mod wheel (CC 0x01) maps value to 0..1", "[midi][cc]")
+TEST_CASE("Mod wheel (CC 0x01) maps value to 0..1" "[midi][cc]")
 {
     struct TestCase { int ccValue; float expected; };
     SUBCASE("zero")
@@ -128,7 +128,7 @@ TEST_CASE("Mod wheel (CC 0x01) maps value to 0..1", "[midi][cc]")
 
 // ─── Sustain Pedal ────────────────────────────────────────────────────────────
 
-TEST_CASE("Sustain pedal (CC 0x40)", "[midi][cc]")
+TEST_CASE("Sustain pedal (CC 0x40)" "[midi][cc]")
 {
     FakeHandler handler;
     midi::MidiProcessor proc{handler};
@@ -165,7 +165,7 @@ TEST_CASE("Sustain pedal (CC 0x40)", "[midi][cc]")
 
 // ─── All Notes Off ────────────────────────────────────────────────────────────
 
-TEST_CASE("All Notes Off (CC >= 0x78)", "[midi][cc]")
+TEST_CASE("All Notes Off (CC >= 0x78)" "[midi][cc]")
 {
     FakeHandler handler;
     midi::MidiProcessor proc{handler};
@@ -193,7 +193,7 @@ TEST_CASE("All Notes Off (CC >= 0x78)", "[midi][cc]")
 
 // ─── Channel Aftertouch ───────────────────────────────────────────────────────
 
-TEST_CASE("Channel Aftertouch (0xD0)", "[midi]")
+TEST_CASE("Channel Aftertouch (0xD0)" "[midi]")
 {
     FakeHandler handler;
     midi::MidiProcessor proc{handler};
@@ -223,7 +223,7 @@ TEST_CASE("Channel Aftertouch (0xD0)", "[midi]")
 
 // ─── Pitch Bend ───────────────────────────────────────────────────────────────
 
-TEST_CASE("Pitch Bend (0xE0)", "[midi]")
+TEST_CASE("Pitch Bend (0xE0)" "[midi]")
 {
     FakeHandler handler;
     midi::MidiProcessor proc{handler};
