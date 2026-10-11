@@ -32,9 +32,9 @@ TEST_CASE("MidiState defaults" "[midi]")
     FakeHandler handler;
     midi::MidiProcessor proc{handler};
 
-    REQUIRE(proc.state().pitchBend    == doctest::Approx(1.0f));
-    REQUIRE(proc.state().modWheel     == doctest::Approx(0.0f));
-    REQUIRE(proc.state().pressure     == doctest::Approx(0.0f));
+    REQUIRE(proc.state().pitchBend    == doctest::Approx(1.0f).epsilon(1e-5f));
+    REQUIRE(proc.state().modWheel     == doctest::Approx(0.0f).epsilon(1e-5f));
+    REQUIRE(proc.state().pressure     == doctest::Approx(0.0f).epsilon(1e-5f));
     REQUIRE(proc.state().sustainPedal == false);
 }
 
@@ -108,21 +108,21 @@ TEST_CASE("Mod wheel (CC 0x01) maps value to 0..1" "[midi][cc]")
         FakeHandler handler;
         midi::MidiProcessor proc{handler};
         proc.process(0xB0, 0x01, 0);
-        REQUIRE(proc.state().modWheel == doctest::Approx(0.0f));
+        REQUIRE(proc.state().modWheel == doctest::Approx(0.0f).epsilon(1e-5f));
     }
     SUBCASE("maximum")
     {
         FakeHandler handler;
         midi::MidiProcessor proc{handler};
         proc.process(0xB0, 0x01, 127);
-        REQUIRE(proc.state().modWheel == doctest::Approx(1.0f));
+        REQUIRE(proc.state().modWheel == doctest::Approx(1.0f).epsilon(1e-5f));
     }
     SUBCASE("midpoint")
     {
         FakeHandler handler;
         midi::MidiProcessor proc{handler};
         proc.process(0xB0, 0x01, 64);
-        REQUIRE(proc.state().modWheel == doctest::Approx(64.0f / 127.0f));
+        REQUIRE(proc.state().modWheel == doctest::Approx(64.0f / 127.0f).epsilon(1e-5f));
     }
 }
 
@@ -201,13 +201,13 @@ TEST_CASE("Channel Aftertouch (0xD0)" "[midi]")
     SUBCASE("zero input gives zero pressure")
     {
         proc.process(0xD0, 0, 0);
-        REQUIRE(proc.state().pressure == doctest::Approx(0.0f));
+        REQUIRE(proc.state().pressure == doctest::Approx(0.0f).epsilon(1e-5f));
     }
 
     SUBCASE("pressure follows quadratic curve")
     {
         proc.process(0xD0, 127, 0);
-        REQUIRE(proc.state().pressure == doctest::Approx(0.0001f * 127.0f * 127.0f));
+        REQUIRE(proc.state().pressure == doctest::Approx(0.0001f * 127.0f * 127.0f).epsilon(1e-5f));
     }
 
     SUBCASE("data1 is masked to 7 bits")
@@ -217,7 +217,7 @@ TEST_CASE("Channel Aftertouch (0xD0)" "[midi]")
         float expected = proc.state().pressure;
 
         proc.process(0xD0, 0xFF, 0);
-        REQUIRE(proc.state().pressure == doctest::Approx(expected));
+        REQUIRE(proc.state().pressure == doctest::Approx(expected).epsilon(1e-5f));
     }
 }
 
