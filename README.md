@@ -1,6 +1,6 @@
-# Jape
+# Jape (Jonny's Audio Plugin Engine)
 
-C++20 engine layers for audio plugins. The public CMake targets are `Jape::Math`, `Jape::Midi`, `Jape::Dsp`, and `Jape::Synth`.
+C++20 engine for audio plugins. The public CMake targets are `Jape::Math`, `Jape::Midi`, `Jape::Dsp`, and `Jape::Synth`.
 
 ## Build and test
 
@@ -17,15 +17,4 @@ Build only the engine libraries without fetching Catch2:
 ```bash
 cmake -S . -B build -DJAPE_BUILD_TESTS=OFF
 cmake --build build --target jape_synth
-```
-
-## Plugin development
-
-Plugin repositories can point `JAPE_SOURCE_DIR` at this checkout to build directly from the local engine source. This is useful when developing the engine and plugin together; keep the path in a local CMake cache or user preset rather than committing a machine-specific path.
-
-```bash
-cmake -B build-plugin \
-    -DJAPE_SOURCE_DIR=/path/to/Jape \
-    -DJAPE_BUILD_TESTS=OFF
-cmake --build build-plugin
 ```
