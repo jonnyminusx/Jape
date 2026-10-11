@@ -1,4 +1,4 @@
-#include <catch2/catch_test_macros.hpp>
+#include <doctest/doctest.h>
 
 #include "midi/MidiLearnMap.h"
 
@@ -10,18 +10,18 @@ TEST_CASE("MidiLearnMap initial state", "[midi][learn]")
 {
     midi::MidiLearnMap map;
 
-    SECTION("all CC slots are unassigned")
+    SUBCASE("all CC slots are unassigned")
     {
         for (size_t i = 0; i < midi::MidiLearnMap::kNumParams; ++i)
             REQUIRE(map.ccAtIndex(i) == midi::MidiLearnMap::kCCUnassigned);
     }
 
-    SECTION("learningParamId returns nullptr")
+    SUBCASE("learningParamId returns nullptr")
     {
         REQUIRE(map.learningParamId() == nullptr);
     }
 
-    SECTION("tryCaptureLearning returns -1 when not learning")
+    SUBCASE("tryCaptureLearning returns -1 when not learning")
     {
         REQUIRE(map.tryCaptureLearning(0x07) == -1);
     }

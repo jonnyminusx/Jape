@@ -1,6 +1,4 @@
-#include <catch2/catch_approx.hpp>
-#include <catch2/catch_test_macros.hpp>
-#include <catch2/generators/catch_generators.hpp>
+#include <doctest/doctest.h>
 
 #include "dsp/Filter.h"
 #include "dsp/Goertzel.h"
@@ -70,23 +68,39 @@ TEST_CASE("Filter reset clears state but preserves coefficients", "[filter]")
     for (int i = 0; i < 4096; ++i)
         out = filter.render(1.0f);
 
-    REQUIRE(out == Catch::Approx(1.0f).margin(0.01f));
+    REQUIRE(out == doctest::Approx(1.0f).margin(0.01f));
 }
 
 // ─── DC gain ─────────────────────────────────────────────────────────────────
 
 TEST_CASE("Filter passes DC at unity gain", "[filter]")
 {
-    const float fs = GENERATE(44100.0f, 96000.0f);
-    dsp::Filter filter;
-    filter.setSampleRate(fs);
-    filter.updateCoefficients(1000.0f, 0.707f);
+    SUBCASE("sample rate 44100 Hz")
+    {
+        const float fs = 44100.0f;
+        dsp::Filter filter;
+        filter.setSampleRate(fs);
+        filter.updateCoefficients(1000.0f, 0.707f);
 
-    float out = 0.0f;
-    for (int i = 0; i < 4096; ++i)
-        out = filter.render(1.0f);
+        float out = 0.0f;
+        for (int i = 0; i < 4096; ++i)
+            out = filter.render(1.0f);
 
-    REQUIRE(out == Catch::Approx(1.0f).margin(0.01f));
+        REQUIRE(out == doctest::Approx(1.0f).margin(0.01f));
+    }
+    SUBCASE("sample rate 96000 Hz")
+    {
+        const float fs = 96000.0f;
+        dsp::Filter filter;
+        filter.setSampleRate(fs);
+        filter.updateCoefficients(1000.0f, 0.707f);
+
+        float out = 0.0f;
+        for (int i = 0; i < 4096; ++i)
+            out = filter.render(1.0f);
+
+        REQUIRE(out == doctest::Approx(1.0f).margin(0.01f));
+    }
 }
 
 // ─── Frequency response ───────────────────────────────────────────────────────
@@ -104,7 +118,7 @@ TEST_CASE("Filter gain at cutoff is -3 dB for Butterworth Q", "[filter][frequenc
     const float gain = measureGain(filter, fc);
     const float gainDb = 20.0f * std::log10(gain);
     INFO("Gain at fc: " << gain << " (" << gainDb << " dB), expected -3 dB");
-    REQUIRE(gainDb == Catch::Approx(-3.0f).margin(1.0f));
+    REQUIRE(gainDb == doctest::Approx(-3.0f).margin(1.0f));
 }
 
 TEST_CASE("Filter attenuates two octaves above cutoff by at least 20 dB", "[filter][frequency]")

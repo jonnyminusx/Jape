@@ -57,13 +57,13 @@ if (SYNPLE_BUILD_TESTS)
 
     include(FetchContent)
     FetchContent_Declare(
-        Catch2
-        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-        GIT_TAG v3.5.2
+        doctest
+        GIT_REPOSITORY https://github.com/doctest/doctest.git
+        GIT_TAG v2.4.11
         GIT_SHALLOW TRUE
     )
-    FetchContent_MakeAvailable(Catch2)
-    FetchContent_GetProperties(Catch2 SOURCE_DIR SYNPLE_CATCH2_SOURCE_DIR)
+    FetchContent_MakeAvailable(doctest)
+    FetchContent_GetProperties(doctest SOURCE_DIR SYNPLE_DOCTEST_SOURCE_DIR)
 
     add_executable(MidiTests tests/MidiLearnMapTest.cpp tests/MidiProcessorTest.cpp)
     add_executable(DspTests tests/AudioBufferTest.cpp tests/FilterTest.cpp)
@@ -74,9 +74,9 @@ if (SYNPLE_BUILD_TESTS)
         tests/SineOscillatorTest.cpp
     )
 
-    target_link_libraries(MidiTests PRIVATE Synple::Midi Catch2::Catch2WithMain)
-    target_link_libraries(DspTests PRIVATE Synple::Dsp Catch2::Catch2WithMain)
-    target_link_libraries(SynthTests PRIVATE Synple::Synth Catch2::Catch2WithMain)
+    target_link_libraries(MidiTests PRIVATE Synple::Midi doctest::doctest_with_main)
+    target_link_libraries(DspTests PRIVATE Synple::Dsp doctest::doctest_with_main)
+    target_link_libraries(SynthTests PRIVATE Synple::Synth doctest::doctest_with_main)
 
     set(kTestTargets MidiTests DspTests SynthTests)
 
@@ -92,9 +92,9 @@ if (SYNPLE_BUILD_TESTS)
         endforeach()
     endif()
 
-    include("${SYNPLE_CATCH2_SOURCE_DIR}/extras/Catch.cmake")
+    include("${SYNPLE_DOCTEST_SOURCE_DIR}/scripts/cmake/doctest.cmake")
     foreach(TARGET IN LISTS kTestTargets)
-        catch_discover_tests(${TARGET})
+        doctest_discover_tests(${TARGET})
         add_custom_command(
             TARGET ${TARGET} POST_BUILD
             COMMAND "$<TARGET_FILE:${TARGET}>"
