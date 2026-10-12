@@ -69,28 +69,14 @@ TEST_CASE("SineOscillator fundamental energy is concentrated at the set frequenc
 {
     constexpr int N = 16384;
 
-    SUBCASE("440 Hz")
-    {
-        const float f0 = 440.0f;
-        const auto sig = renderSine(f0, sampleRate, N);
-        const float atF0   = dsp::goertzel(sig, f0,           sampleRate);
-        const float atLow  = dsp::goertzel(sig, f0 - 100.0f, sampleRate);
-        const float atHigh = dsp::goertzel(sig, f0 + 100.0f, sampleRate);
-        INFO("f0=" << f0 << " Hz, energy at f0=" << atF0 << " at f0-100=" << atLow << " at f0+100=" << atHigh);
-        REQUIRE(atF0 > 10.0f * atLow);
-        REQUIRE(atF0 > 10.0f * atHigh);
-    }
-    SUBCASE("1000 Hz")
-    {
-        const float f0 = 1000.0f;
-        const auto sig = renderSine(f0, sampleRate, N);
-        const float atF0   = dsp::goertzel(sig, f0,           sampleRate);
-        const float atLow  = dsp::goertzel(sig, f0 - 100.0f, sampleRate);
-        const float atHigh = dsp::goertzel(sig, f0 + 100.0f, sampleRate);
-        INFO("f0=" << f0 << " Hz, energy at f0=" << atF0 << " at f0-100=" << atLow << " at f0+100=" << atHigh);
-        REQUIRE(atF0 > 10.0f * atLow);
-        REQUIRE(atF0 > 10.0f * atHigh);
-    }
+    const float f0 = GENERATE(440.0f, 1000.0f);
+    const auto sig = renderSine(f0, sampleRate, N);
+    const float atF0   = dsp::goertzel(sig, f0,           sampleRate);
+    const float atLow  = dsp::goertzel(sig, f0 - 100.0f, sampleRate);
+    const float atHigh = dsp::goertzel(sig, f0 + 100.0f, sampleRate);
+    INFO("f0=" << f0 << " Hz, energy at f0=" << atF0 << " at f0-100=" << atLow << " at f0+100=" << atHigh);
+    REQUIRE(atF0 > 10.0f * atLow);
+    REQUIRE(atF0 > 10.0f * atHigh);
 }
 
 // ─── Reset ────────────────────────────────────────────────────────────────────

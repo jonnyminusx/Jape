@@ -102,28 +102,12 @@ TEST_CASE("Note data bytes are masked to 7 bits" "[midi][note]")
 
 TEST_CASE("Mod wheel (CC 0x01) maps value to 0..1" "[midi][cc]")
 {
-    struct TestCase { int ccValue; float expected; };
-    SUBCASE("zero")
-    {
-        FakeHandler handler;
-        midi::MidiProcessor proc{handler};
-        proc.process(0xB0, 0x01, 0);
-        REQUIRE(proc.state().modWheel == doctest::Approx(0.0f).epsilon(1e-5f));
-    }
-    SUBCASE("maximum")
-    {
-        FakeHandler handler;
-        midi::MidiProcessor proc{handler};
-        proc.process(0xB0, 0x01, 127);
-        REQUIRE(proc.state().modWheel == doctest::Approx(1.0f).epsilon(1e-5f));
-    }
-    SUBCASE("midpoint")
-    {
-        FakeHandler handler;
-        midi::MidiProcessor proc{handler};
-        proc.process(0xB0, 0x01, 64);
-        REQUIRE(proc.state().modWheel == doctest::Approx(64.0f / 127.0f).epsilon(1e-5f));
-    }
+    const int ccValue = GENERATE(0, 127, 64);
+    FakeHandler handler;
+    midi::MidiProcessor proc{handler};
+    proc.process(0xB0, 0x01, ccValue);
+    INFO("CC value: " << ccValue);
+    REQUIRE(proc.state().modWheel == doctest::Approx(static_cast<float>(ccValue) / 127.0f).epsilon(1e-5f));
 }
 
 // ─── Sustain Pedal ────────────────────────────────────────────────────────────

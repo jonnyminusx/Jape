@@ -75,32 +75,17 @@ TEST_CASE("Filter reset clears state but preserves coefficients" "[filter]")
 
 TEST_CASE("Filter passes DC at unity gain" "[filter]")
 {
-    SUBCASE("sample rate 44100 Hz")
-    {
-        const float fs = 44100.0f;
-        dsp::Filter filter;
-        filter.setSampleRate(fs);
-        filter.updateCoefficients(1000.0f, 0.707f);
+    const float fs = GENERATE(44100.0f, 96000.0f);
+    dsp::Filter filter;
+    filter.setSampleRate(fs);
+    filter.updateCoefficients(1000.0f, 0.707f);
 
-        float out = 0.0f;
-        for (int i = 0; i < 4096; ++i)
-            out = filter.render(1.0f);
+    float out = 0.0f;
+    for (int i = 0; i < 4096; ++i)
+        out = filter.render(1.0f);
 
-        REQUIRE(std::abs(out - 1.0f) <= 0.01f);
-    }
-    SUBCASE("sample rate 96000 Hz")
-    {
-        const float fs = 96000.0f;
-        dsp::Filter filter;
-        filter.setSampleRate(fs);
-        filter.updateCoefficients(1000.0f, 0.707f);
-
-        float out = 0.0f;
-        for (int i = 0; i < 4096; ++i)
-            out = filter.render(1.0f);
-
-        REQUIRE(std::abs(out - 1.0f) <= 0.01f);
-    }
+    INFO("sample rate: " << fs);
+    REQUIRE(std::abs(out - 1.0f) <= 0.01f);
 }
 
 // ─── Frequency response ───────────────────────────────────────────────────────

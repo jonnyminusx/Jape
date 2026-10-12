@@ -48,24 +48,10 @@ TEST_CASE("Raw BLEP output has near-zero DC after warmup" "[oscillator][dc]")
     constexpr int N = 16384;
     constexpr float tolerance = 0.01f;
 
-    SUBCASE("440 Hz")
-    {
-        const auto sig = renderBlep(440.0f, sampleRate, N);
-        INFO("f0=440 Hz, mean=" << dsp::mean(sig));
-        REQUIRE(std::abs(dsp::mean(sig)) < tolerance);
-    }
-    SUBCASE("1000 Hz")
-    {
-        const auto sig = renderBlep(1000.0f, sampleRate, N);
-        INFO("f0=1000 Hz, mean=" << dsp::mean(sig));
-        REQUIRE(std::abs(dsp::mean(sig)) < tolerance);
-    }
-    SUBCASE("5000 Hz")
-    {
-        const auto sig = renderBlep(5000.0f, sampleRate, N);
-        INFO("f0=5000 Hz, mean=" << dsp::mean(sig));
-        REQUIRE(std::abs(dsp::mean(sig)) < tolerance);
-    }
+    const float f0 = GENERATE(440.0f, 1000.0f, 5000.0f);
+    const auto sig = renderBlep(f0, sampleRate, N);
+    INFO("f0=" << f0 << " Hz, mean=" << dsp::mean(sig));
+    REQUIRE(std::abs(dsp::mean(sig)) < tolerance);
 }
 
 // ─── Modulation ───────────────────────────────────────────────────────────────
@@ -106,23 +92,21 @@ TEST_CASE("setModulation clamps near-zero and negative values to prevent NaN" "[
     constexpr int N = 2048;
     const float period = sampleRate / 440.0f;
 
-    for (const float mod : {0.0f, -0.5f, -1.0f})
-    {
-        synth::PolyBlepOscillator osc;
-        osc.setAmplitude(1.0f);
-        osc.setPeriod(period);
-        osc.setModulation(mod);
+    const float mod = GENERATE(0.0f, -0.5f, -1.0f);
+    synth::PolyBlepOscillator osc;
+    osc.setAmplitude(1.0f);
+    osc.setPeriod(period);
+    osc.setModulation(mod);
 
-        bool allFinite = true;
-        for (int i = 0; i < N; ++i)
+    bool allFinite = true;
+    for (int i = 0; i < N; ++i)
+    {
+        if (!std::isfinite(osc.nextSample()))
         {
-            if (!std::isfinite(osc.nextSample()))
-            {
-                allFinite = false;
-                break;
-            }
+            allFinite = false;
+            break;
         }
-        INFO("modulation = " << mod);
-        REQUIRE(allFinite);
     }
+    INFO("modulation = " << mod);
+    REQUIRE(allFinite);
 }
