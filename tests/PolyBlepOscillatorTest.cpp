@@ -1,6 +1,4 @@
-#include <catch2/catch_approx.hpp>
-#include <catch2/catch_test_macros.hpp>
-#include <catch2/generators/catch_generators.hpp>
+#include <doctest/doctest.h>
 
 #include "dsp/Mean.h"
 #include "dsp/Rms.h"
@@ -45,20 +43,20 @@ std::vector<float> renderBlep(float f0, float fs, int numSamples, float amplitud
 // The leaky integrator's DC gain is 1/(1-0.997) ≈ 333×, so even a tiny
 // residual DC in the raw output would read as a large mean in the integrated
 // signal — testing PolyBlepOscillator directly isolates the compensation logic.
-TEST_CASE("Raw BLEP output has near-zero DC after warmup", "[oscillator][dc]")
+TEST_CASE("Raw BLEP output has near-zero DC after warmup" "[oscillator][dc]")
 {
     constexpr int N = 16384;
     constexpr float tolerance = 0.01f;
 
     const float f0 = GENERATE(440.0f, 1000.0f, 5000.0f);
-    auto sig = renderBlep(f0, sampleRate, N);
+    const auto sig = renderBlep(f0, sampleRate, N);
     INFO("f0=" << f0 << " Hz, mean=" << dsp::mean(sig));
     REQUIRE(std::abs(dsp::mean(sig)) < tolerance);
 }
 
 // ─── Modulation ───────────────────────────────────────────────────────────────
 
-TEST_CASE("Modulation parameter changes oscillator output", "[oscillator][modulation]")
+TEST_CASE("Modulation parameter changes oscillator output" "[oscillator][modulation]")
 {
     // setModulation() scales halfPeriod, which changes halfPhase_ and increment_.
     // Tested on PolyBlepOscillator directly: the leaky integrator in
@@ -86,7 +84,7 @@ TEST_CASE("Modulation parameter changes oscillator output", "[oscillator][modula
     REQUIRE(std::abs(rms1 - rmsHalf) > 0.01f);
 }
 
-TEST_CASE("setModulation clamps near-zero and negative values to prevent NaN", "[oscillator][modulation]")
+TEST_CASE("setModulation clamps near-zero and negative values to prevent NaN" "[oscillator][modulation]")
 {
     // Without the clamp in setModulation(), modulation=0 causes
     // increment_ = halfPhase_ / 0 → ±inf, producing NaN output.
@@ -94,23 +92,21 @@ TEST_CASE("setModulation clamps near-zero and negative values to prevent NaN", "
     constexpr int N = 2048;
     const float period = sampleRate / 440.0f;
 
-    for (const float mod : {0.0f, -0.5f, -1.0f})
-    {
-        synth::PolyBlepOscillator osc;
-        osc.setAmplitude(1.0f);
-        osc.setPeriod(period);
-        osc.setModulation(mod);
+    const float mod = GENERATE(0.0f, -0.5f, -1.0f);
+    synth::PolyBlepOscillator osc;
+    osc.setAmplitude(1.0f);
+    osc.setPeriod(period);
+    osc.setModulation(mod);
 
-        bool allFinite = true;
-        for (int i = 0; i < N; ++i)
+    bool allFinite = true;
+    for (int i = 0; i < N; ++i)
+    {
+        if (!std::isfinite(osc.nextSample()))
         {
-            if (!std::isfinite(osc.nextSample()))
-            {
-                allFinite = false;
-                break;
-            }
+            allFinite = false;
+            break;
         }
-        INFO("modulation = " << mod);
-        REQUIRE(allFinite);
     }
+    INFO("modulation = " << mod);
+    REQUIRE(allFinite);
 }

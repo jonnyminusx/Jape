@@ -1,4 +1,4 @@
-#include <catch2/catch_test_macros.hpp>
+#include <doctest/doctest.h>
 
 #include "midi/MidiLearnMap.h"
 
@@ -6,33 +6,33 @@
 
 // ─── Construction ─────────────────────────────────────────────────────────────
 
-TEST_CASE("MidiLearnMap initial state", "[midi][learn]")
+TEST_CASE("MidiLearnMap initial state" "[midi][learn]")
 {
     midi::MidiLearnMap map;
 
-    SECTION("all CC slots are unassigned")
+    SUBCASE("all CC slots are unassigned")
     {
         for (size_t i = 0; i < midi::MidiLearnMap::kNumParams; ++i)
             REQUIRE(map.ccAtIndex(i) == midi::MidiLearnMap::kCCUnassigned);
     }
 
-    SECTION("learningParamId returns nullptr")
+    SUBCASE("learningParamId returns nullptr")
     {
         REQUIRE(map.learningParamId() == nullptr);
     }
 
-    SECTION("tryCaptureLearning returns -1 when not learning")
+    SUBCASE("tryCaptureLearning returns -1 when not learning")
     {
         REQUIRE(map.tryCaptureLearning(0x07) == -1);
     }
 }
 
-TEST_CASE("kNumParams equals 34", "[midi][learn]")
+TEST_CASE("kNumParams equals 34" "[midi][learn]")
 {
     REQUIRE(midi::MidiLearnMap::kNumParams == 34);
 }
 
-TEST_CASE("all kParamIds entries are non-null and non-empty", "[midi][learn]")
+TEST_CASE("all kParamIds entries are non-null and non-empty" "[midi][learn]")
 {
     for (size_t i = 0; i < midi::MidiLearnMap::kNumParams; ++i)
     {
@@ -43,14 +43,14 @@ TEST_CASE("all kParamIds entries are non-null and non-empty", "[midi][learn]")
 
 // ─── beginLearn / cancelLearn ─────────────────────────────────────────────────
 
-TEST_CASE("beginLearn sets the learning param", "[midi][learn]")
+TEST_CASE("beginLearn sets the learning param" "[midi][learn]")
 {
     midi::MidiLearnMap map;
     map.beginLearn("filterFreq");
     REQUIRE(std::string_view{map.learningParamId()} == "filterFreq");
 }
 
-TEST_CASE("cancelLearn clears learning state", "[midi][learn]")
+TEST_CASE("cancelLearn clears learning state" "[midi][learn]")
 {
     midi::MidiLearnMap map;
     map.beginLearn("filterFreq");
@@ -58,7 +58,7 @@ TEST_CASE("cancelLearn clears learning state", "[midi][learn]")
     REQUIRE(map.learningParamId() == nullptr);
 }
 
-TEST_CASE("beginLearn with unknown ID is a no-op", "[midi][learn]")
+TEST_CASE("beginLearn with unknown ID is a no-op" "[midi][learn]")
 {
     midi::MidiLearnMap map;
     map.beginLearn("doesNotExist");
@@ -67,7 +67,7 @@ TEST_CASE("beginLearn with unknown ID is a no-op", "[midi][learn]")
 
 // ─── tryCaptureLearning ───────────────────────────────────────────────────────
 
-TEST_CASE("tryCaptureLearning captures CC and returns param index", "[midi][learn]")
+TEST_CASE("tryCaptureLearning captures CC and returns param index" "[midi][learn]")
 {
     midi::MidiLearnMap map;
     map.beginLearn("envAttack");
@@ -89,7 +89,7 @@ TEST_CASE("tryCaptureLearning captures CC and returns param index", "[midi][lear
     REQUIRE(map.ccAtIndex(static_cast<size_t>(captured)) == 0x12);
 }
 
-TEST_CASE("tryCaptureLearning clears learning state after capture", "[midi][learn]")
+TEST_CASE("tryCaptureLearning clears learning state after capture" "[midi][learn]")
 {
     midi::MidiLearnMap map;
     map.beginLearn("envAttack");
@@ -97,7 +97,7 @@ TEST_CASE("tryCaptureLearning clears learning state after capture", "[midi][lear
     REQUIRE(map.learningParamId() == nullptr);
 }
 
-TEST_CASE("second tryCaptureLearning without new beginLearn returns -1", "[midi][learn]")
+TEST_CASE("second tryCaptureLearning without new beginLearn returns -1" "[midi][learn]")
 {
     midi::MidiLearnMap map;
     map.beginLearn("envAttack");
@@ -105,7 +105,7 @@ TEST_CASE("second tryCaptureLearning without new beginLearn returns -1", "[midi]
     REQUIRE(map.tryCaptureLearning(0x13) == -1);
 }
 
-TEST_CASE("tryCaptureLearning returns index within bounds", "[midi][learn]")
+TEST_CASE("tryCaptureLearning returns index within bounds" "[midi][learn]")
 {
     midi::MidiLearnMap map;
     map.beginLearn("osc2PulseWidth"); // last entry
@@ -116,7 +116,7 @@ TEST_CASE("tryCaptureLearning returns index within bounds", "[midi][learn]")
 
 // ─── clearLearn ───────────────────────────────────────────────────────────────
 
-TEST_CASE("clearLearn removes a CC assignment", "[midi][learn]")
+TEST_CASE("clearLearn removes a CC assignment" "[midi][learn]")
 {
     midi::MidiLearnMap map;
     map.setCC(0, 0x07);
@@ -124,7 +124,7 @@ TEST_CASE("clearLearn removes a CC assignment", "[midi][learn]")
     REQUIRE(map.ccAtIndex(0) == midi::MidiLearnMap::kCCUnassigned);
 }
 
-TEST_CASE("clearLearn with unknown ID is a no-op", "[midi][learn]")
+TEST_CASE("clearLearn with unknown ID is a no-op" "[midi][learn]")
 {
     midi::MidiLearnMap map;
     map.setCC(0, 0x07);
@@ -134,13 +134,13 @@ TEST_CASE("clearLearn with unknown ID is a no-op", "[midi][learn]")
 
 // ─── ccForParam ───────────────────────────────────────────────────────────────
 
-TEST_CASE("ccForParam returns kCCUnassigned for unassigned param", "[midi][learn]")
+TEST_CASE("ccForParam returns kCCUnassigned for unassigned param" "[midi][learn]")
 {
     midi::MidiLearnMap map;
     REQUIRE(map.ccForParam("filterFreq") == midi::MidiLearnMap::kCCUnassigned);
 }
 
-TEST_CASE("ccForParam returns the assigned CC after setCC", "[midi][learn]")
+TEST_CASE("ccForParam returns the assigned CC after setCC" "[midi][learn]")
 {
     midi::MidiLearnMap map;
     // find filterFreq index
@@ -155,7 +155,7 @@ TEST_CASE("ccForParam returns the assigned CC after setCC", "[midi][learn]")
     REQUIRE(map.ccForParam("filterFreq") == 0x4A);
 }
 
-TEST_CASE("ccForParam returns kCCUnassigned for unknown ID", "[midi][learn]")
+TEST_CASE("ccForParam returns kCCUnassigned for unknown ID" "[midi][learn]")
 {
     midi::MidiLearnMap map;
     map.setCC(0, 0x07);
@@ -164,7 +164,7 @@ TEST_CASE("ccForParam returns kCCUnassigned for unknown ID", "[midi][learn]")
 
 // ─── setCC / forEachAssignment ────────────────────────────────────────────────
 
-TEST_CASE("forEachAssignment visits zero entries when nothing assigned", "[midi][learn]")
+TEST_CASE("forEachAssignment visits zero entries when nothing assigned" "[midi][learn]")
 {
     midi::MidiLearnMap map;
     int count{0};
@@ -172,7 +172,7 @@ TEST_CASE("forEachAssignment visits zero entries when nothing assigned", "[midi]
     REQUIRE(count == 0);
 }
 
-TEST_CASE("forEachAssignment visits exactly the assigned entries", "[midi][learn]")
+TEST_CASE("forEachAssignment visits exactly the assigned entries" "[midi][learn]")
 {
     midi::MidiLearnMap map;
     map.setCC(0, 0x01);
@@ -193,7 +193,7 @@ TEST_CASE("forEachAssignment visits exactly the assigned entries", "[midi][learn
 
 // ─── Boundary ─────────────────────────────────────────────────────────────────
 
-TEST_CASE("last slot (index kNumParams-1) can be set and read", "[midi][learn]")
+TEST_CASE("last slot (index kNumParams-1) can be set and read" "[midi][learn]")
 {
     midi::MidiLearnMap map;
     map.setCC(midi::MidiLearnMap::kNumParams - 1, 0x7F);

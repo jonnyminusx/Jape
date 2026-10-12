@@ -4,7 +4,7 @@ C++20 engine for audio plugins. The public CMake targets are `Jape::Math`, `Jape
 
 ## Build and test
 
-Tests are enabled by default when this repository is configured as the top-level project. Catch2 is fetched only when tests are enabled.
+Tests are enabled by default when this repository is configured as the top-level project. doctest is fetched only when tests are enabled.
 
 ```bash
 cmake -S . -B build -DJAPE_BUILD_TESTS=ON
@@ -12,7 +12,7 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-Build only the engine libraries without fetching Catch2:
+Build only the engine libraries without fetching doctest:
 
 ```bash
 cmake -S . -B build -DJAPE_BUILD_TESTS=OFF

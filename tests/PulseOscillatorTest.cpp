@@ -1,5 +1,4 @@
-#include <catch2/catch_approx.hpp>
-#include <catch2/catch_test_macros.hpp>
+#include <doctest/doctest.h>
 
 #include "dsp/Goertzel.h"
 #include "synth/PulseOscillator.h"
@@ -17,7 +16,7 @@ constexpr int warmup = 4096;
 
 // ─── PWM: odd-harmonic dominance ─────────────────────────────────────────────
 
-TEST_CASE("PulseOscillator at 50% duty cycle has odd-harmonic dominance", "[oscillator][pwm]")
+TEST_CASE("PulseOscillator at 50% duty cycle has odd-harmonic dominance" "[oscillator][pwm]")
 {
     // At 50% duty cycle the pulse wave is a square wave with only odd harmonics.
     // noteOn() initialises the secondary BLEP at half-period offset; setModulation(1.0)
@@ -61,7 +60,7 @@ TEST_CASE("PulseOscillator at 50% duty cycle has odd-harmonic dominance", "[osci
     REQUIRE(suppression3dB <= 15.0f);
 }
 
-TEST_CASE("PulseOscillator duty cycle changes with setModulation", "[oscillator][pwm]")
+TEST_CASE("PulseOscillator duty cycle changes with setModulation" "[oscillator][pwm]")
 {
     // setModulation(pwmMod) changes the duty cycle via the secondary BLEP.
     // At 50% duty (pwmMod=1.0) the 2nd harmonic is suppressed ≥20 dB.

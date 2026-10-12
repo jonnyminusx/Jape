@@ -1,6 +1,4 @@
-#include <catch2/catch_approx.hpp>
-#include <catch2/catch_test_macros.hpp>
-#include <catch2/generators/catch_generators.hpp>
+#include <doctest/doctest.h>
 
 #include "dsp/Goertzel.h"
 #include "dsp/Rms.h"
@@ -38,7 +36,7 @@ std::vector<float> renderSine(float f0, float fs, int numSamples, float amplitud
 
 // ─── Amplitude scaling ────────────────────────────────────────────────────────
 
-TEST_CASE("SineOscillator RMS scales linearly with amplitude", "[oscillator][amplitude]")
+TEST_CASE("SineOscillator RMS scales linearly with amplitude" "[oscillator][amplitude]")
 {
     constexpr int N = 16384;
 
@@ -51,12 +49,12 @@ TEST_CASE("SineOscillator RMS scales linearly with amplitude", "[oscillator][amp
     INFO("rms(1x) = " << rms1 << "  rms(2x) = " << rms2);
     REQUIRE(rms1 > 0.0f);
     // Doubling amplitude should double RMS, within 5%
-    REQUIRE(rms2 == Catch::Approx(2.0f * rms1).epsilon(0.05f));
+    REQUIRE(rms2 == doctest::Approx(2.0f * rms1).epsilon(0.05f));
 }
 
 // ─── Zero amplitude → silence ─────────────────────────────────────────────────
 
-TEST_CASE("SineOscillator zero amplitude produces silence", "[oscillator][amplitude]")
+TEST_CASE("SineOscillator zero amplitude produces silence" "[oscillator][amplitude]")
 {
     constexpr int N = 8192;
     const auto sig = renderSine(440.0f, sampleRate, N, 0.0f);
@@ -67,7 +65,7 @@ TEST_CASE("SineOscillator zero amplitude produces silence", "[oscillator][amplit
 
 // ─── Frequency accuracy ───────────────────────────────────────────────────────
 
-TEST_CASE("SineOscillator fundamental energy is concentrated at the set frequency", "[oscillator][frequency]")
+TEST_CASE("SineOscillator fundamental energy is concentrated at the set frequency" "[oscillator][frequency]")
 {
     constexpr int N = 16384;
 
@@ -83,7 +81,7 @@ TEST_CASE("SineOscillator fundamental energy is concentrated at the set frequenc
 
 // ─── Reset ────────────────────────────────────────────────────────────────────
 
-TEST_CASE("SineOscillator produces identical output after reset", "[oscillator][reset]")
+TEST_CASE("SineOscillator produces identical output after reset" "[oscillator][reset]")
 {
     constexpr int N = 2048;
     constexpr float f0 = 440.0f;
@@ -110,5 +108,5 @@ TEST_CASE("SineOscillator produces identical output after reset", "[oscillator][
 
     REQUIRE(run1.size() == run2.size());
     for (size_t i = 0; i < run1.size(); ++i)
-        REQUIRE(run1[i] == Catch::Approx(run2[i]).epsilon(1e-5f));
+        REQUIRE(run1[i] == doctest::Approx(run2[i]).epsilon(1e-5f));
 }
