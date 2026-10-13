@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(Jape VERSION 0.1.1 LANGUAGES CXX)
+project(Jape VERSION 0.1.2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -36,7 +36,6 @@ add_library(jape_synth STATIC
     source/synth/PulseOscillator.cpp
     source/synth/SawtoothOscillator.cpp
     source/synth/Output.cpp
-    source/synth/Presets.cpp
     source/synth/SineOscillator.cpp
     source/synth/Synth.cpp
     source/synth/Voice.cpp
