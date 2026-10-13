@@ -36,7 +36,6 @@ add_library(jape_synth STATIC
     source/synth/PulseOscillator.cpp
     source/synth/SawtoothOscillator.cpp
     source/synth/Output.cpp
-    source/synth/Presets.cpp
     source/synth/SineOscillator.cpp
     source/synth/Synth.cpp
     source/synth/Voice.cpp
